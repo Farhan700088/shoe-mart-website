@@ -6,7 +6,7 @@ const catalogData = {
         title: "BEST OFFER",
         folder: "Best Offer",
         items: [
-            { id: "shoe01", name: "shoename", price: "price", images: ["1.png", "2.png"] },
+            { id: "shoe01", name: "Black Bolt", price: "price", images: ["1.png", "2.png"] },
             { id: "shoe02", name: "shoename", price: "price", images: ["1.png", "2.png"] },
             { id: "shoe03", name: "shoename", price: "price", images: ["1.png", "2.png"] },
             { id: "shoe04", name: "shoename", price: "price", images: ["1.png", "2.png"] }
