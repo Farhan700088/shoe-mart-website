@@ -1,4 +1,5 @@
 const WHATSAPP_NUMBER = "917000887436";
+const SITE_BASE_URL = "https://farhan700088.github.io/shoe-mart-website";
 
 // Yahan aap apne hisab se "shoename" aur "price" edit kar sakte hain
 const catalogData = {
@@ -24,6 +25,7 @@ const catalogData = {
 };
 
 let currentCategoryKey = null;
+let currentCategoryTitle = "";
 let currentShoe = null;
 let currentFolder = "";
 let currentImgIdx = 0;
@@ -85,6 +87,17 @@ function openCategory(categoryKey, pushHistory = true) {
   switchPage("page2");
 }
 
+function updateWhatsappLink() {
+  if (!currentShoe) return;
+  const upperShoeName = currentShoe.name.toUpperCase();
+  const formattedPrice = formatPrice(currentShoe.price);
+  const relativeImgPath = buildImagePath(currentFolder, currentShoe.id, currentShoe.images[currentImgIdx]);
+  const fullImageUrl = `${SITE_BASE_URL}/${relativeImgPath}`;
+
+  const message = `Hello SHOE MART, I want to order:\nCategory: ${currentCategoryTitle}\nShoe: ${upperShoeName}\nPrice: ${formattedPrice}\nPhoto: ${fullImageUrl}`;
+  document.getElementById("whatsappBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
 function updateSlide(index) {
   if (!currentShoe) return;
   const total = currentShoe.images.length;
@@ -99,10 +112,13 @@ function updateSlide(index) {
   document.querySelectorAll("#sliderDots .dot").forEach((dot, idx) => {
     dot.classList.toggle("active", idx === currentImgIdx);
   });
+
+  updateWhatsappLink();
 }
 
 function openShoeDetail(categoryKey, shoeIndex, pushHistory = true) {
   const category = catalogData[categoryKey];
+  currentCategoryTitle = category.title;
   currentFolder = category.folder;
   currentShoe = category.items[shoeIndex];
   currentImgIdx = 0;
@@ -112,9 +128,6 @@ function openShoeDetail(categoryKey, shoeIndex, pushHistory = true) {
 
   document.getElementById("detailShoeName").textContent = upperShoeName;
   document.getElementById("detailShoePrice").textContent = formattedPrice;
-
-  const message = `Hello SHOE MART, I want details for:\nCategory: ${category.title}\nShoe: ${upperShoeName}\nPrice: ${formattedPrice}`;
-  document.getElementById("whatsappBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
   const dotsContainer = document.getElementById("sliderDots");
   dotsContainer.innerHTML = "";
