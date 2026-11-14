@@ -6,19 +6,19 @@ const catalogData = {
         title: "BEST OFFER",
         folder: "Best Offer",
         items: [
-            { id: "shoe01", name: "Black Bolt", price: "price", images: ["1.png", "2.png"] },
-            { id: "shoe02", name: "shoename", price: "price", images: ["1.png", "2.png"] },
-            { id: "shoe03", name: "shoename", price: "price", images: ["1.png", "2.png"] },
-            { id: "shoe04", name: "shoename", price: "price", images: ["1.png", "2.png"] }
+            { id: "shoe01", name: "Black Bolt", price: "1999", images: ["1.png", "2.png"] },
+            { id: "shoe02", name: "Green Mint", price: "1999", images: ["1.png", "2.png"] },
+            { id: "shoe03", name: "Black Flash", price: "1999", images: ["1.png", "2.png"] },
+            { id: "shoe04", name: "White Snow", price: "1999", images: ["1.png", "2.png"] }
         ]
     },
     poloShoe: {
         title: "POLO SHOE",
         folder: "Polo Shoe",
         items: [
-            { id: "shoe01", name: "shoename", price: "price", images: ["1.png", "2.png", "3.png"] },
-            { id: "shoe02", name: "shoename", price: "price", images: ["1.png", "2.png", "3.png"] },
-            { id: "shoe03", name: "shoename", price: "price", images: ["1.png", "2.png", "3.png"] }
+            { id: "shoe01", name: "Polo", price: "1999", images: ["1.png", "2.png", "3.png"] },
+            { id: "shoe02", name: "Polo", price: "1999", images: ["1.png", "2.png", "3.png"] },
+            { id: "shoe03", name: "Polo", price: "1999", images: ["1.png", "2.png", "3.png"] }
         ]
     }
 };
