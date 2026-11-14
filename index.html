@@ -9,7 +9,7 @@
 <body>
 
   <!-- Top Header -->
-  <header class="top-header" onclick="showPage1()">
+  <header class="top-header" onclick="goHome()">
     <img src="Shoe%20Mart/shoemartlogo.png" alt="SHOE MART LOGO" class="brand-logo">
     <h1 class="brand-name">SHOE MART</h1>
   </header>
@@ -17,14 +17,16 @@
   <!-- PAGE 01: Categories -->
   <main id="page1" class="page active">
     <div class="category-row">
-      <!-- Section 1: Best Offer (Blank Box) -->
-      <div class="category-card" onclick="openCategory('bestOffer')">
-        <div class="category-box blank-box"></div>
-        <p class="category-label">BEST OFFER</p>
+      <!-- Section 1: Special Offer -->
+      <div class="category-card" onclick="openCategory('bestOffer', true)">
+        <div class="category-box">
+          <img src="Shoe%20Mart/Bestoffer.jpg" alt="SPECIAL OFFER">
+        </div>
+        <p class="category-label">SPECIAL OFFER</p>
       </div>
 
-      <!-- Section 2: Polo Shoe (Polo Logo) -->
-      <div class="category-card" onclick="openCategory('poloShoe')">
+      <!-- Section 2: Polo Shoe -->
+      <div class="category-card" onclick="openCategory('poloShoe', true)">
         <div class="category-box">
           <img src="Shoe%20Mart/polologo.jpg" alt="POLO SHOE">
         </div>
@@ -36,7 +38,6 @@
   <!-- PAGE 02: Shoe Grid -->
   <main id="page2" class="page">
     <div class="page2-top">
-      <button class="back-btn" onclick="showPage1()">&#8592; BACK</button>
       <h2 id="categoryTitle" class="section-title"></h2>
     </div>
     <div id="shoeGrid" class="shoe-grid"></div>
@@ -44,10 +45,6 @@
 
   <!-- PAGE 03: Shoe Details & Manual Slider with Dots -->
   <main id="page3" class="page">
-    <div class="page3-top">
-      <button class="back-btn" onclick="backToPage2()">&#8592; BACK</button>
-    </div>
-
     <div id="sliderContainer" class="slider-container">
       <img id="slideImage" src="" alt="SHOE VIEW">
     </div>
@@ -55,7 +52,7 @@
 
     <div class="details-box">
       <h2 id="detailShoeName" class="shoe-title">SHOENAME</h2>
-      <p id="detailShoePrice" class="shoe-price">price</p>
+      <p id="detailShoePrice" class="shoe-price">₹1999/-</p>
       <a id="whatsappBtn" href="#" target="_blank" class="whatsapp-btn">ORDER ON WHATSAPP</a>
     </div>
   </main>
