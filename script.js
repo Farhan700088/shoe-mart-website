@@ -98,14 +98,16 @@ function updateWhatsappLink() {
   document.getElementById("whatsappBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-function goToSlide(index, animate = true) {
+function updateSlide(index) {
   if (!currentShoe) return;
   const total = currentShoe.images.length;
-  currentImgIdx = Math.max(0, Math.min(index, total - 1));
+  currentImgIdx = (index + total) % total;
 
-  const track = document.getElementById("sliderTrack");
-  track.style.transition = animate ? "transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1)" : "none";
-  track.style.transform = `translate3d(-${currentImgIdx * 100}%, 0, 0)`;
+  document.getElementById("slideImage").src = buildImagePath(
+    currentFolder,
+    currentShoe.id,
+    currentShoe.images[currentImgIdx]
+  );
 
   document.querySelectorAll("#sliderDots .dot").forEach((dot, idx) => {
     dot.classList.toggle("active", idx === currentImgIdx);
@@ -127,28 +129,17 @@ function openShoeDetail(categoryKey, shoeIndex, pushHistory = true) {
   document.getElementById("detailShoeName").textContent = upperShoeName;
   document.getElementById("detailShoePrice").textContent = formattedPrice;
 
-  const track = document.getElementById("sliderTrack");
   const dotsContainer = document.getElementById("sliderDots");
-  track.innerHTML = "";
   dotsContainer.innerHTML = "";
 
-  currentShoe.images.forEach((imgFile, idx) => {
-    const slide = document.createElement("div");
-    slide.className = "slide-item";
-    const img = document.createElement("img");
-    img.src = buildImagePath(currentFolder, currentShoe.id, imgFile);
-    img.alt = `${upperShoeName} ${idx + 1}`;
-    img.decoding = "sync";
-    slide.appendChild(img);
-    track.appendChild(slide);
-
+  currentShoe.images.forEach((_, idx) => {
     const dot = document.createElement("span");
     dot.className = idx === 0 ? "dot active" : "dot";
-    dot.onclick = () => goToSlide(idx, true);
+    dot.onclick = () => updateSlide(idx);
     dotsContainer.appendChild(dot);
   });
 
-  goToSlide(0, false);
+  updateSlide(0);
 
   if (pushHistory) {
     history.pushState({ page: "page3", categoryKey, shoeIndex }, "", `#${categoryKey}-${shoeIndex}`);
@@ -170,46 +161,28 @@ window.addEventListener("popstate", (event) => {
   }
 });
 
-// Live Finger-Follow Touch Swipe & Mouse Drag
+// Mobile Touch Swipe & Desktop Drag Support
 const sliderEl = document.getElementById("sliderContainer");
-const trackEl = document.getElementById("sliderTrack");
 let startX = 0;
-let currentDeltaX = 0;
-let isDragging = false;
 
-function handleStart(clientX) {
-  if (!currentShoe || currentShoe.images.length <= 1) return;
-  isDragging = true;
-  startX = clientX;
-  currentDeltaX = 0;
-  trackEl.style.transition = "none";
-}
+sliderEl.addEventListener("touchstart", (e) => {
+  startX = e.touches[0].clientX;
+}, { passive: true });
 
-function handleMove(clientX) {
-  if (!isDragging) return;
-  currentDeltaX = clientX - startX;
-  const containerWidth = sliderEl.offsetWidth || 1;
-  const percentOffset = (currentDeltaX / containerWidth) * 100;
-  const basePercent = -currentImgIdx * 100;
-  trackEl.style.transform = `translate3d(${basePercent + percentOffset}%, 0, 0)`;
-}
-
-function handleEnd() {
-  if (!isDragging) return;
-  isDragging = false;
-  if (currentDeltaX < -35 && currentImgIdx < currentShoe.images.length - 1) {
-    goToSlide(currentImgIdx + 1, true);
-  } else if (currentDeltaX > 35 && currentImgIdx > 0) {
-    goToSlide(currentImgIdx - 1, true);
-  } else {
-    goToSlide(currentImgIdx, true);
+sliderEl.addEventListener("touchend", (e) => {
+  const diffX = startX - e.changedTouches[0].clientX;
+  if (Math.abs(diffX) > 40) {
+    updateSlide(diffX > 0 ? currentImgIdx + 1 : currentImgIdx - 1);
   }
-}
+});
 
-sliderEl.addEventListener("touchstart", (e) => handleStart(e.touches[0].clientX), { passive: true });
-sliderEl.addEventListener("touchmove", (e) => handleMove(e.touches[0].clientX), { passive: true });
-sliderEl.addEventListener("touchend", handleEnd);
+sliderEl.addEventListener("mousedown", (e) => {
+  startX = e.clientX;
+});
 
-sliderEl.addEventListener("mousedown", (e) => handleStart(e.clientX));
-window.addEventListener("mousemove", (e) => handleMove(e.clientX));
-window.addEventListener("mouseup", handleEnd);
+sliderEl.addEventListener("mouseup", (e) => {
+  const diffX = startX - e.clientX;
+  if (Math.abs(diffX) > 40) {
+    updateSlide(diffX > 0 ? currentImgIdx + 1 : currentImgIdx - 1);
+  }
+});
