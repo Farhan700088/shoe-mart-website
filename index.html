@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHOE MART</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="top-header" onclick="showPage1()">
+    <img src="Shoe%20Mart/shoemartlogo.png" alt="SHOE MART LOGO" class="brand-logo">
+    <h1 class="brand-name">SHOE MART</h1>
+  </header>
+
+  <!-- PAGE 01: Categories -->
+  <main id="page1" class="page active">
+    <div class="category-row">
+      <!-- Section 1: Best Offer (Blank Box) -->
+      <div class="category-card" onclick="openCategory('bestOffer')">
+        <div class="category-box blank-box"></div>
+        <p class="category-label">BEST OFFER</p>
+      </div>
+
+      <!-- Section 2: Polo Shoe (Polo Logo) -->
+      <div class="category-card" onclick="openCategory('poloShoe')">
+        <div class="category-box">
+          <img src="Shoe%20Mart/polologo.jpg" alt="POLO SHOE">
+        </div>
+        <p class="category-label">POLO SHOE</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- PAGE 02: Shoe Grid -->
+  <main id="page2" class="page">
+    <div class="page2-top">
+      <button class="back-btn" onclick="showPage1()">&#8592; BACK</button>
+      <h2 id="categoryTitle" class="section-title"></h2>
+    </div>
+    <div id="shoeGrid" class="shoe-grid"></div>
+  </main>
+
+  <!-- PAGE 03: Shoe Details & Auto Slideshow -->
+  <main id="page3" class="page">
+    <div class="page3-top">
+      <button class="back-btn" onclick="backToPage2()">&#8592; BACK</button>
+    </div>
+
+    <div class="slider-container">
+      <img id="slideImage" src="" alt="SHOE VIEW">
+    </div>
+
+    <div class="details-box">
+      <h2 id="detailShoeName" class="shoe-title">SHOENAME</h2>
+      <p id="detailShoePrice" class="shoe-price">price</p>
+      <a id="whatsappBtn" href="#" target="_blank" class="whatsapp-btn">ORDER ON WHATSAPP</a>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
