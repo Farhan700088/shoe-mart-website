@@ -1,206 +1,232 @@
 * {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    background-color: #ffffff;
-    color: #111111;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 16px;
+  background-color: #ffffff;
+  color: #111111;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
 }
 
 /* Header */
 .top-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #eeeeee;
-    margin-bottom: 24px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eeeeee;
+  margin-bottom: 24px;
+  cursor: pointer;
 }
 
 .brand-logo {
-    width: 52px;
-    height: 52px;
-    object-fit: contain;
-    border-radius: 6px;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 .brand-name {
-    font-size: 24px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #000000;
+  font-size: 24px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #000000;
 }
 
 /* Page Visibility */
 .page {
-    display: none;
+  display: none;
 }
 
 .page.active {
-    display: block;
+  display: block;
 }
 
 /* Page 01: Left & Right Boxes */
 .category-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
 }
 
 .category-card {
-    cursor: pointer;
-    text-align: center;
+  cursor: pointer;
+  text-align: center;
 }
 
 .category-box {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
 }
 
 .blank-box {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
 .category-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .category-label {
-    margin-top: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 /* Navigation & Titles */
 .page2-top,
 .page3-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
 }
 
 .back-btn {
-    background: #f2f2f2;
-    border: none;
-    padding: 8px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    border-radius: 6px;
-    cursor: pointer;
-    text-transform: uppercase;
+  background: #f2f2f2;
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
 .section-title {
-    font-size: 18px;
-    font-weight: 800;
-    text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
 /* Page 02: 2-Column Shoe Grid */
 .shoe-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
 .shoe-card {
-    cursor: pointer;
-    text-align: center;
+  cursor: pointer;
+  text-align: center;
 }
 
 .shoe-thumb {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .shoe-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .grid-price {
-    margin-top: 8px;
-    font-size: 15px;
-    font-weight: 700;
-    color: #111111;
+  margin-top: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
 }
 
-/* Page 03: Slideshow & Details */
+/* Page 03: Manual Slider, Dots & Details */
 .slider-container {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
 }
 
 .slider-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #cccccc;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.dot.active {
+  background-color: #111111;
+  transform: scale(1.25);
 }
 
 .details-box {
-    margin-top: 20px;
-    text-align: center;
+  margin-top: 16px;
+  text-align: center;
 }
 
 .shoe-title {
-    font-size: 22px;
-    font-weight: 800;
-    text-transform: uppercase;
-    margin-bottom: 6px;
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
 .shoe-price {
-    font-size: 18px;
-    font-weight: 700;
-    color: #333333;
-    margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 20px;
 }
 
 .whatsapp-btn {
-    display: block;
-    width: 100%;
-    background-color: #25D366;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 800;
-    padding: 14px;
-    border-radius: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  display: block;
+  width: 100%;
+  background-color: #25D366;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 14px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
