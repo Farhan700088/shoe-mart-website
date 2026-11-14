@@ -3,7 +3,7 @@ const WHATSAPP_NUMBER = "917000887436";
 // Yahan aap apne hisab se "shoename" aur "price" edit kar sakte hain
 const catalogData = {
   bestOffer: {
-    title: "BEST OFFER",
+    title: "SPECIAL OFFER",
     folder: "Best Offer",
     items: [
       { id: "shoe01", name: "Black Bolt", price: "1999", images: ["1.png", "2.png"] },
@@ -28,6 +28,11 @@ let currentShoe = null;
 let currentFolder = "";
 let currentImgIdx = 0;
 
+function formatPrice(rawPrice) {
+  const clean = String(rawPrice).replace(/[₹/-]/g, "").trim();
+  return `₹${clean}/-`;
+}
+
 function buildImagePath(categoryFolder, shoeId, fileName) {
   return encodeURI(`Shoe Mart/${categoryFolder}/${shoeId}/${fileName}`);
 }
@@ -42,7 +47,14 @@ function showPage1() {
   switchPage("page1");
 }
 
-function openCategory(categoryKey) {
+function goHome() {
+  if (!document.getElementById("page1").classList.contains("active")) {
+    history.pushState({ page: "page1" }, "", "#home");
+    showPage1();
+  }
+}
+
+function openCategory(categoryKey, pushHistory = true) {
   currentCategoryKey = categoryKey;
   const category = catalogData[categoryKey];
 
@@ -53,7 +65,7 @@ function openCategory(categoryKey) {
   category.items.forEach((shoe, index) => {
     const card = document.createElement("div");
     card.className = "shoe-card";
-    card.onclick = () => openShoeDetail(categoryKey, index);
+    card.onclick = () => openShoeDetail(categoryKey, index, true);
 
     const firstImg = buildImagePath(category.folder, shoe.id, shoe.images[0]);
 
@@ -61,21 +73,16 @@ function openCategory(categoryKey) {
       <div class="shoe-thumb">
         <img src="${firstImg}" alt="${shoe.name.toUpperCase()}">
       </div>
-      <p class="grid-price">${shoe.price}</p>
+      <p class="grid-price">${formatPrice(shoe.price)}</p>
     `;
 
     grid.appendChild(card);
   });
 
-  switchPage("page2");
-}
-
-function backToPage2() {
-  if (currentCategoryKey) {
-    openCategory(currentCategoryKey);
-  } else {
-    showPage1();
+  if (pushHistory) {
+    history.pushState({ page: "page2", categoryKey }, "", `#${categoryKey}`);
   }
+  switchPage("page2");
 }
 
 function updateSlide(index) {
@@ -94,17 +101,19 @@ function updateSlide(index) {
   });
 }
 
-function openShoeDetail(categoryKey, shoeIndex) {
+function openShoeDetail(categoryKey, shoeIndex, pushHistory = true) {
   const category = catalogData[categoryKey];
   currentFolder = category.folder;
   currentShoe = category.items[shoeIndex];
   currentImgIdx = 0;
 
   const upperShoeName = currentShoe.name.toUpperCase();
-  document.getElementById("detailShoeName").textContent = upperShoeName;
-  document.getElementById("detailShoePrice").textContent = currentShoe.price;
+  const formattedPrice = formatPrice(currentShoe.price);
 
-  const message = `Hello SHOE MART, I want details for:\nCategory: ${category.title}\nShoe: ${upperShoeName}\nPrice: ${currentShoe.price}`;
+  document.getElementById("detailShoeName").textContent = upperShoeName;
+  document.getElementById("detailShoePrice").textContent = formattedPrice;
+
+  const message = `Hello SHOE MART, I want details for:\nCategory: ${category.title}\nShoe: ${upperShoeName}\nPrice: ${formattedPrice}`;
   document.getElementById("whatsappBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
   const dotsContainer = document.getElementById("sliderDots");
@@ -118,8 +127,26 @@ function openShoeDetail(categoryKey, shoeIndex) {
   });
 
   updateSlide(0);
+
+  if (pushHistory) {
+    history.pushState({ page: "page3", categoryKey, shoeIndex }, "", `#${categoryKey}-${shoeIndex}`);
+  }
   switchPage("page3");
 }
+
+// Phone Back Button & Side-Swipe Gesture Support
+history.replaceState({ page: "page1" }, "", "#home");
+
+window.addEventListener("popstate", (event) => {
+  const state = event.state;
+  if (!state || state.page === "page1") {
+    showPage1();
+  } else if (state.page === "page2") {
+    openCategory(state.categoryKey, false);
+  } else if (state.page === "page3") {
+    openShoeDetail(state.categoryKey, state.shoeIndex, false);
+  }
+});
 
 // Mobile Touch Swipe & Desktop Drag Support
 const sliderEl = document.getElementById("sliderContainer");
