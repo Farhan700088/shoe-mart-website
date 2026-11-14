@@ -1,230 +1,215 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+const WHATSAPP_NUMBER = "917000887436";
+const SITE_BASE_URL = "https://farhan700088.github.io/shoe-mart-website";
+
+// Yahan aap apne hisab se "shoename" aur "price" edit kar sakte hain
+const catalogData = {
+  bestOffer: {
+    title: "SPECIAL OFFER",
+    folder: "Best Offer",
+    items: [
+      { id: "shoe01", name: "Black Bolt", price: "1999", images: ["1.png", "2.png"] },
+      { id: "shoe02", name: "Green Mint", price: "1999", images: ["1.png", "2.png"] },
+      { id: "shoe03", name: "Black Flash", price: "1999", images: ["1.png", "2.png"] },
+      { id: "shoe04", name: "White Snow", price: "1999", images: ["1.png", "2.png"] }
+    ]
+  },
+  poloShoe: {
+    title: "POLO SHOE",
+    folder: "Polo Shoe",
+    items: [
+      { id: "shoe01", name: "Polo", price: "1999", images: ["1.png", "2.png", "3.png"] },
+      { id: "shoe02", name: "Polo", price: "1999", images: ["1.png", "2.png", "3.png"] },
+      { id: "shoe03", name: "Polo", price: "1999", images: ["1.png", "2.png", "3.png"] }
+    ]
+  }
+};
+
+let currentCategoryKey = null;
+let currentCategoryTitle = "";
+let currentShoe = null;
+let currentFolder = "";
+let currentImgIdx = 0;
+
+function formatPrice(rawPrice) {
+  const clean = String(rawPrice).replace(/[₹/-]/g, "").trim();
+  return `₹${clean}/-`;
 }
 
-body {
-  background-color: #ffffff;
-  color: #111111;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 16px;
+function buildImagePath(categoryFolder, shoeId, fileName) {
+  return encodeURI(`Shoe Mart/${categoryFolder}/${shoeId}/${fileName}`);
 }
 
-/* Header */
-.top-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #eeeeee;
-  margin-bottom: 24px;
-  cursor: pointer;
+function switchPage(pageId) {
+  document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
+  document.getElementById(pageId).classList.add("active");
+  window.scrollTo(0, 0);
 }
 
-.brand-logo {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
-  border-radius: 6px;
+function showPage1() {
+  switchPage("page1");
 }
 
-.brand-name {
-  font-size: 24px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #000000;
+function goHome() {
+  if (!document.getElementById("page1").classList.contains("active")) {
+    history.pushState({ page: "page1" }, "", "#home");
+    showPage1();
+  }
 }
 
-/* Page Visibility */
-.page {
-  display: none;
+function openCategory(categoryKey, pushHistory = true) {
+  currentCategoryKey = categoryKey;
+  const category = catalogData[categoryKey];
+
+  document.getElementById("categoryTitle").textContent = category.title;
+  const grid = document.getElementById("shoeGrid");
+  grid.innerHTML = "";
+
+  category.items.forEach((shoe, index) => {
+    const card = document.createElement("div");
+    card.className = "shoe-card";
+    card.onclick = () => openShoeDetail(categoryKey, index, true);
+
+    const firstImg = buildImagePath(category.folder, shoe.id, shoe.images[0]);
+
+    card.innerHTML = `
+      <div class="shoe-thumb">
+        <img src="${firstImg}" alt="${shoe.name.toUpperCase()}">
+      </div>
+      <p class="grid-price">${formatPrice(shoe.price)}</p>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  if (pushHistory) {
+    history.pushState({ page: "page2", categoryKey }, "", `#${categoryKey}`);
+  }
+  switchPage("page2");
 }
 
-.page.active {
-  display: block;
+function updateWhatsappLink() {
+  if (!currentShoe) return;
+  const upperShoeName = currentShoe.name.toUpperCase();
+  const formattedPrice = formatPrice(currentShoe.price);
+  const relativeImgPath = buildImagePath(currentFolder, currentShoe.id, currentShoe.images[currentImgIdx]);
+  const fullImageUrl = `${SITE_BASE_URL}/${relativeImgPath}`;
+
+  const message = `Hello SHOE MART, I want to order:\nCategory: ${currentCategoryTitle}\nShoe: ${upperShoeName}\nPrice: ${formattedPrice}\nPhoto: ${fullImageUrl}`;
+  document.getElementById("whatsappBtn").href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-/* Page 01: Left & Right Boxes */
-.category-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 20px;
+function goToSlide(index, animate = true) {
+  if (!currentShoe) return;
+  const total = currentShoe.images.length;
+  currentImgIdx = Math.max(0, Math.min(index, total - 1));
+
+  const track = document.getElementById("sliderTrack");
+  track.style.transition = animate ? "transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1)" : "none";
+  track.style.transform = `translate3d(-${currentImgIdx * 100}%, 0, 0)`;
+
+  document.querySelectorAll("#sliderDots .dot").forEach((dot, idx) => {
+    dot.classList.toggle("active", idx === currentImgIdx);
+  });
+
+  updateWhatsappLink();
 }
 
-.category-card {
-  cursor: pointer;
-  text-align: center;
+function openShoeDetail(categoryKey, shoeIndex, pushHistory = true) {
+  const category = catalogData[categoryKey];
+  currentCategoryTitle = category.title;
+  currentFolder = category.folder;
+  currentShoe = category.items[shoeIndex];
+  currentImgIdx = 0;
+
+  const upperShoeName = currentShoe.name.toUpperCase();
+  const formattedPrice = formatPrice(currentShoe.price);
+
+  document.getElementById("detailShoeName").textContent = upperShoeName;
+  document.getElementById("detailShoePrice").textContent = formattedPrice;
+
+  const track = document.getElementById("sliderTrack");
+  const dotsContainer = document.getElementById("sliderDots");
+  track.innerHTML = "";
+  dotsContainer.innerHTML = "";
+
+  currentShoe.images.forEach((imgFile, idx) => {
+    const slide = document.createElement("div");
+    slide.className = "slide-item";
+    const img = document.createElement("img");
+    img.src = buildImagePath(currentFolder, currentShoe.id, imgFile);
+    img.alt = `${upperShoeName} ${idx + 1}`;
+    img.decoding = "sync";
+    slide.appendChild(img);
+    track.appendChild(slide);
+
+    const dot = document.createElement("span");
+    dot.className = idx === 0 ? "dot active" : "dot";
+    dot.onclick = () => goToSlide(idx, true);
+    dotsContainer.appendChild(dot);
+  });
+
+  goToSlide(0, false);
+
+  if (pushHistory) {
+    history.pushState({ page: "page3", categoryKey, shoeIndex }, "", `#${categoryKey}-${shoeIndex}`);
+  }
+  switchPage("page3");
 }
 
-.category-box {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
+// Phone Back Button & Side-Swipe Gesture Support
+history.replaceState({ page: "page1" }, "", "#home");
+
+window.addEventListener("popstate", (event) => {
+  const state = event.state;
+  if (!state || state.page === "page1") {
+    showPage1();
+  } else if (state.page === "page2") {
+    openCategory(state.categoryKey, false);
+  } else if (state.page === "page3") {
+    openShoeDetail(state.categoryKey, state.shoeIndex, false);
+  }
+});
+
+// Live Finger-Follow Touch Swipe & Mouse Drag
+const sliderEl = document.getElementById("sliderContainer");
+const trackEl = document.getElementById("sliderTrack");
+let startX = 0;
+let currentDeltaX = 0;
+let isDragging = false;
+
+function handleStart(clientX) {
+  if (!currentShoe || currentShoe.images.length <= 1) return;
+  isDragging = true;
+  startX = clientX;
+  currentDeltaX = 0;
+  trackEl.style.transition = "none";
 }
 
-.category-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+function handleMove(clientX) {
+  if (!isDragging) return;
+  currentDeltaX = clientX - startX;
+  const containerWidth = sliderEl.offsetWidth || 1;
+  const percentOffset = (currentDeltaX / containerWidth) * 100;
+  const basePercent = -currentImgIdx * 100;
+  trackEl.style.transform = `translate3d(${basePercent + percentOffset}%, 0, 0)`;
 }
 
-.category-label {
-  margin-top: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
+function handleEnd() {
+  if (!isDragging) return;
+  isDragging = false;
+  if (currentDeltaX < -35 && currentImgIdx < currentShoe.images.length - 1) {
+    goToSlide(currentImgIdx + 1, true);
+  } else if (currentDeltaX > 35 && currentImgIdx > 0) {
+    goToSlide(currentImgIdx - 1, true);
+  } else {
+    goToSlide(currentImgIdx, true);
+  }
 }
 
-/* Page 02 Title Centered */
-.page2-top {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
-}
+sliderEl.addEventListener("touchstart", (e) => handleStart(e.touches[0].clientX), { passive: true });
+sliderEl.addEventListener("touchmove", (e) => handleMove(e.touches[0].clientX), { passive: true });
+sliderEl.addEventListener("touchend", handleEnd);
 
-.section-title {
-  font-size: 20px;
-  font-weight: 800;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-/* Page 02: 2-Column Shoe Grid */
-.shoe-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.shoe-card {
-  cursor: pointer;
-  text-align: center;
-}
-
-.shoe-thumb {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.shoe-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.grid-price {
-  margin-top: 8px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #111111;
-}
-
-/* Page 03: Instant Smooth Track Slider */
-.slider-container {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border: 1px solid #e5e5e5;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #ffffff;
-  user-select: none;
-  touch-action: pan-y;
-  cursor: grab;
-}
-
-.slider-track {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  will-change: transform;
-  transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.slide-item {
-  flex: 0 0 100%;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.slide-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-.slider-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background-color: #cccccc;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.dot.active {
-  background-color: #111111;
-  transform: scale(1.25);
-}
-
-.details-box {
-  margin-top: 16px;
-  text-align: center;
-}
-
-.shoe-title {
-  font-size: 22px;
-  font-weight: 800;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.shoe-price {
-  font-size: 18px;
-  font-weight: 700;
-  color: #333333;
-  margin-bottom: 18px;
-}
-
-.whatsapp-btn {
-  display: inline-block;
-  background-color: #25D366;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 800;
-  padding: 12px 22px;
-  border-radius: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+sliderEl.addEventListener("mousedown", (e) => handleStart(e.clientX));
+window.addEventListener("mousemove", (e) => handleMove(e.clientX));
+window.addEventListener("mouseup", handleEnd);
